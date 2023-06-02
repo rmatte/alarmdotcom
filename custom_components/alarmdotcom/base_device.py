@@ -80,10 +80,10 @@ class BaseDevice(CoordinatorEntity):  # type: ignore
 
         if hasattr(self, "is_on"):
             return self.is_on is not None
-        if hasattr(self, "state"):
-            return self.state is not None
         if hasattr(self, "is_locked"):
             return self.is_locked is not None
+        if hasattr(self, "state"):
+            return self.state is not None
 
         return True  # Covers switches, numbers, etc.
 
