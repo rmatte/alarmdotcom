@@ -87,12 +87,12 @@ class AlarmControlPanel(HardwareBaseDevice, AlarmControlPanelEntity):  # type: i
             else None
         )
 
-        self._attr_supported_features = (
-            AlarmControlPanelEntityFeature.ARM_HOME | AlarmControlPanelEntityFeature.ARM_AWAY
-        )
-
-        if self._device.supports_night_arming:
-            self._attr_supported_features |= AlarmControlPanelEntityFeature.ARM_NIGHT
+        if not self._device.read_only:
+            self._attr_supported_features = (
+                AlarmControlPanelEntityFeature.ARM_HOME | AlarmControlPanelEntityFeature.ARM_AWAY
+            )
+            if self._device.supports_night_arming:
+                self._attr_supported_features |= AlarmControlPanelEntityFeature.ARM_NIGHT
 
     @property
     def extra_state_attributes(self) -> Mapping[str, Any] | None:

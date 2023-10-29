@@ -13,7 +13,17 @@ from homeassistant.const import EVENT_HOMEASSISTANT_STOP
 from homeassistant.core import Event, HomeAssistant
 from homeassistant.exceptions import ConfigEntryAuthFailed, ConfigEntryNotReady
 from homeassistant.helpers import device_registry as dr
-from pyalarmdotcomajax import OtpRequired
+from pyalarmdotcomajax import AllDevices_t, OtpRequired
+from pyalarmdotcomajax.devices.camera import Camera
+from pyalarmdotcomajax.devices.garage_door import GarageDoor
+from pyalarmdotcomajax.devices.gate import Gate
+from pyalarmdotcomajax.devices.image_sensor import ImageSensor
+from pyalarmdotcomajax.devices.light import Light
+from pyalarmdotcomajax.devices.partition import Partition
+from pyalarmdotcomajax.devices.scene import Scene
+from pyalarmdotcomajax.devices.sensor import Sensor
+from pyalarmdotcomajax.devices.thermostat import Thermostat
+from pyalarmdotcomajax.devices.water_sensor import WaterSensor
 from pyalarmdotcomajax.exceptions import (
     AlarmdotcomException,
     AuthenticationFailed,
@@ -37,6 +47,32 @@ from .const import (
 from .controller import AlarmIntegrationController
 
 LOGGER = logging.getLogger(__name__)
+
+
+@dataclass
+class AlarmdotcomReadOnlyDescriptionMixin:
+    """Functions for an attribute entity."""
+
+    value_fn: Callable[[BaseDevice], bool | None]
+
+
+@dataclass
+class AlarmdotcomReadOnlyDescription(BinarySensorEntityDescription, AlarmdotcomAttributeDescriptionMixin):  # type: ignore
+    """Describes an attribute entity."""
+
+
+READ_ONLY_REPRESENTATIONS: dict[AllDevices_t, list[dict]] = {
+    Camera: [],
+    GarageDoor: [],
+    Gate: [],
+    ImageSensor: [],
+    Light: [],
+    Partition: [],
+    Scene: [],
+    Sensor: [],
+    Thermostat: [],
+    WaterSensor: [],
+}
 
 
 async def async_setup_entry(hass: HomeAssistant, config_entry: ConfigEntry) -> bool:
